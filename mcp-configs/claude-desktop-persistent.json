@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "tasklist-persistent": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--name", "tasklist-mcp-persistent",
+        "-v", "./tasklist-data:/app/data",
+        "p47phoenix/tasklist-mcp:latest"
+      ],
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "DATABASE_PATH": "/app/data/tasks.db"
+      }
+    }
+  }
+}

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TaskListMcp.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eec3b21d654baa254348b15ec1fa5ff744f989b8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b105f59cd1d88fcabd30e4395420a9f6a2db7067")]
 [assembly: System.Reflection.AssemblyProductAttribute("TaskListMcp.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TaskListMcp.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

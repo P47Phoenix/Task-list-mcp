@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  tasklist-mcp:
+    image: p47phoenix/tasklist-mcp:latest
+    container_name: tasklist-mcp-service
+    stdin_open: true
+    tty: true
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DATABASE_PATH=/app/data/tasks.db
+    volumes:
+      - ./tasklist-data:/app/data
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    ports:
+      - "8080:8080"  # Health check endpoint
+      - "8081:8081"  # Additional services
+
+  # Optional: Database backup service
+  tasklist-backup:
+    image: alpine:latest
+    container_name: tasklist-backup
+    volumes:
+      - ./tasklist-data:/data
+      - ./backups:/backups
+    command: >
+      sh -c "
+        while true; do
+          sleep 3600
+          cp /data/tasks.db /backups/tasks-backup-$$(date +%Y%m%d-%H%M%S).db
+          find /backups -name 'tasks-backup-*.db' -mtime +7 -delete
+        done
+      "
+    depends_on:
+      - tasklist-mcp
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  tasklist-data:
+    driver: local

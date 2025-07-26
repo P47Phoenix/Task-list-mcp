@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasklist-mcp-server
+  labels:
+    app: tasklist-mcp
+    version: v1.0.0
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tasklist-mcp
+  template:
+    metadata:
+      labels:
+        app: tasklist-mcp
+    spec:
+      containers:
+      - name: tasklist-mcp
+        image: tasklist-mcp:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: TASKLIST_DB_PATH
+          value: "/app/data/tasks.db"
+        - name: ASPNETCORE_URLS
+          value: "http://+:8080"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: tasklist-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tasklist-mcp-service
+  labels:
+    app: tasklist-mcp
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: http
+  selector:
+    app: tasklist-mcp
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tasklist-data-pvc
+  labels:
+    app: tasklist-mcp
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tasklist-mcp-ingress
+  labels:
+    app: tasklist-mcp
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - tasklist.yourdomain.com
+    secretName: tasklist-tls
+  rules:
+  - host: tasklist.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tasklist-mcp-service
+            port:
+              number: 80

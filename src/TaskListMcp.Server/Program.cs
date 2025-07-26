@@ -1,11 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
 using ModelContextProtocol.Server;
 using TaskListMcp.Models;
 using TaskListMcp.Data;
 using TaskListMcp.Core.Services;
 using TaskListMcp.Server.Tools;
+using TaskListMcp.Server.Configuration;
 
 namespace TaskListMcp.Server;
 
@@ -39,6 +43,9 @@ class Program
             var databaseManager = serviceProvider.GetRequiredService<DatabaseManager>();
             await databaseManager.InitializeDatabaseAsync();
             logger.LogInformation("Database initialized successfully");
+
+            // Start health check web server in background
+            var webHostTask = StartWebHostAsync(serviceProvider, logger);
 
             // Create MCP server
             logger.LogInformation("Starting MCP server...");
@@ -92,6 +99,9 @@ class Program
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        // Add configuration
+        services.AddSingleton(configuration);
+
         // Add logging
         services.AddLogging(builder =>
         {
@@ -106,6 +116,13 @@ class Program
         services.AddSingleton(config.Server);
         services.AddSingleton(config.Features);
 
+        // Add configuration options
+        services.Configure<TaskListMcpOptions>(configuration.GetSection(TaskListMcpOptions.SectionName));
+
+        // Add controllers for health endpoints
+        services.AddControllers();
+        services.AddHealthChecks();
+
         // Add database manager
         services.AddSingleton<DatabaseManager>();
 
@@ -119,5 +136,49 @@ class Program
 
         // MCP tools are automatically discovered via attributes
         // No need to manually register them with the new SDK
+    }
+
+    private static async Task StartWebHostAsync(IServiceProvider serviceProvider, ILogger logger)
+    {
+        try
+        {
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            
+            var builder = WebApplication.CreateBuilder();
+            
+            // Configure services for web host
+            ConfigureServices(builder.Services, configuration);
+
+            var app = builder.Build();
+
+            // Configure HTTP pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseRouting();
+            app.MapControllers();
+            app.MapHealthChecks("/health");
+
+            logger.LogInformation("Health check server starting on http://localhost:8080");
+            
+            // Run web server in background
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await app.RunAsync("http://localhost:8080");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Health check server failed");
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to start health check server");
+        }
     }
 }

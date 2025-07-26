@@ -14,36 +14,81 @@ A comprehensive Model Context Protocol (MCP) server for managing hierarchical ta
 
 ## Installation
 
-1. Clone the repository:
+### Docker Hub (Recommended)
+
+The easiest way to use the Task List MCP Server is via the pre-built Docker container:
+
 ```bash
-git clone <repository-url>
-cd task-list-mcp
+# Pull the container
+docker pull p47phoenix/tasklist-mcp:latest
+
+# Run with temporary data
+docker run -it --rm p47phoenix/tasklist-mcp:latest
+
+# Run with persistent data
+mkdir tasklist-data
+docker run -it --rm -v $(pwd)/tasklist-data:/app/data p47phoenix/tasklist-mcp:latest
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+### MCP Client Configuration
 
-3. Build the project:
-```bash
-npm run build
-```
+Ready-to-use configurations for popular MCP clients are available in the `mcp-configs/` directory:
+
+- **Claude Desktop**: `mcp-configs/claude-desktop.json`
+- **VS Code Cline**: `mcp-configs/cline-vscode.json`
+- **Docker Compose**: `mcp-configs/docker-compose.yml`
+- **Universal**: `mcp-configs/universal-config.sh`
+
+See [mcp-configs/README.md](mcp-configs/README.md) for detailed setup instructions.
+
+### Build from Source
+
+1. **Quick Deploy**
+   ```bash
+   # Linux/macOS
+   chmod +x deploy.sh
+   ./deploy.sh
+
+   # Windows
+   deploy.bat
+   ```
+
+2. **Manual Docker**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+### Local Development
+
+1. **Prerequisites**
+   - .NET 8.0 SDK
+
+2. **Build and Run**
+   ```bash
+   dotnet build
+   cd src/TaskListMcp.Server
+   dotnet run
+   ```
 
 ## Usage
 
-### As an MCP Server
+### Production Deployment
 
-Start the server:
-```bash
-npm start
-```
+See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive deployment options including:
+- Docker and Docker Compose
+- Kubernetes with auto-scaling  
+- Cloud platforms (Azure, AWS, Google Cloud)
+- Monitoring and health checks
+- Security configurations
 
-The server will create a SQLite database (`tasks.db`) in the current directory if one doesn't exist.
+### Health Monitoring
+
+- **Basic Health**: `http://localhost:8080/health`
+- **Detailed Metrics**: `http://localhost:8080/health/detailed`
 
 ### Database Location
 
-By default, the database is created as `tasks.db` in the current working directory. You can specify a custom path by modifying the initialization in `src/index.ts`.
+By default, the database is created as `tasks.db` in the current directory. You can specify a custom path using the `TASKLIST_DB_PATH` environment variable.
 
 ## Available Tools
 
@@ -80,6 +125,13 @@ By default, the database is created as `tasks.db` in the current working directo
 - `search_lists` - Search task lists with comprehensive filtering options
 - `get_search_suggestions` - Get search suggestions based on existing data
 - `get_task_analytics` - Get detailed analytics and insights about tasks
+
+### Health and Monitoring
+
+- Health check endpoints (`/health`, `/health/detailed`)
+- Database connectivity monitoring
+- Performance metrics and system information
+- Docker health checks and container monitoring
 
 ## Available Resources
 
@@ -167,7 +219,12 @@ npm run format
 - ✅ **Phase 6: Advanced Features** - Search, filtering, analytics (4 tools)
   - ✅ Advanced Search and Filtering (2 tools)
   - ✅ Search Suggestions and Analytics (2 tools)
-- 📋 **Phase 7: Configuration and Deployment** - Docker, environment setup
+- ✅ **Phase 7: Configuration and Deployment** - Docker, environment setup, health monitoring
+  - ✅ Docker containerization with multi-stage builds
+  - ✅ Kubernetes deployment configurations
+  - ✅ Health check endpoints and monitoring
+  - ✅ Environment-based configuration management
+  - ✅ Production-ready deployment scripts
 
 ### MCP Tools Summary
 **Total Tools: 34**

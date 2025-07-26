@@ -1,0 +1,20 @@
+# Cline Extension Configuration
+# Add this to your VS Code settings.json for the Cline extension
+
+{
+  "cline.mcpServers": {
+    "tasklist": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--name", "cline-tasklist-mcp",
+        "p47phoenix/tasklist-mcp:latest"
+      ],
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

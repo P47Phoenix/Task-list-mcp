@@ -1,15 +1,66 @@
+# Build outputs
+bin/
+obj/
+out/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json
+
+# Node.js
 node_modules/
 dist/
 *.log
+.npm
+.yarn/
+
+# Environment files
 .env
 .env.local
+.env.development
+.env.test
+.env.production
+
+# OS generated files
 .DS_Store
 Thumbs.db
-.vscode/
+
+# IDE files
+.vscode/launch.json
+.vscode/tasks.json
 .idea/
+*.swp
+*.swo
+
+# Database files
 *.db
 *.sqlite
 *.sqlite3
+*.db-journal
+
+# Test coverage
 coverage/
 .nyc_output/
 .coverage/
+TestResults/
+*.trx
+*.coveragexml
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "tasklist": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--name", "tasklist-mcp-session",
+        "p47phoenix/tasklist-mcp:latest"
+      ],
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    }
+  }
+}
