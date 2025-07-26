@@ -12,7 +12,7 @@ Thank you for your interest in contributing to the Task List MCP Server! This do
 ### Development Setup
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/p47phoenix/Task-list-mcp.git
+   git clone https://github.com/P47Phoenix/Task-list-mcp.git
    cd Task-list-mcp
    ```
 

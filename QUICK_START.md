@@ -56,7 +56,7 @@ This guide shows you how to quickly connect to the Task List MCP Server using po
 
 1. **Download the docker-compose.yml:**
    ```bash
-   curl -O https://raw.githubusercontent.com/p47phoenix/Task-list-mcp/main/mcp-configs/docker-compose.yml
+   curl -O https://raw.githubusercontent.com/P47Phoenix/Task-list-mcp/main/mcp-configs/docker-compose.yml
    ```
 
 2. **Start the services:**
