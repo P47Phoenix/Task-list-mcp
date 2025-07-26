@@ -198,8 +198,9 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVe
 ## Support
 
 - **Docker Hub**: https://hub.docker.com/r/p47phoenix/tasklist-mcp
+- **GitHub Repository**: https://github.com/p47phoenix/Task-list-mcp
 - **Documentation**: See main README.md
-- **Issues**: Report issues in the GitHub repository
+- **Issues**: Report issues at https://github.com/p47phoenix/Task-list-mcp/issues
 
 ## Features Available
 
