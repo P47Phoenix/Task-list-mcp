@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.log
+.env
+.env.local
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.db
+*.sqlite
+*.sqlite3
+coverage/
+.nyc_output/
+.coverage/

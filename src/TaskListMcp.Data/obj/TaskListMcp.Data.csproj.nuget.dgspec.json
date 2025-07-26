@@ -1,0 +1,134 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Data\\TaskListMcp.Data.csproj": {}
+  },
+  "projects": {
+    "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Data\\TaskListMcp.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Data\\TaskListMcp.Data.csproj",
+        "projectName": "TaskListMcp.Data",
+        "projectPath": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Data\\TaskListMcp.Data.csproj",
+        "packagesPath": "C:\\Users\\micha\\.nuget\\packages\\",
+        "outputPath": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\micha\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Models\\TaskListMcp.Models.csproj": {
+                "projectPath": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Models\\TaskListMcp.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Models\\TaskListMcp.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Models\\TaskListMcp.Models.csproj",
+        "projectName": "TaskListMcp.Models",
+        "projectPath": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Models\\TaskListMcp.Models.csproj",
+        "packagesPath": "C:\\Users\\micha\\.nuget\\packages\\",
+        "outputPath": "C:\\GitHub\\Task-list-mcp\\src\\TaskListMcp.Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\micha\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
