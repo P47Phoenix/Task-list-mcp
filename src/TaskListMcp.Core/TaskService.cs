@@ -31,7 +31,7 @@ public class TaskService
 
         _logger.LogInformation("Creating new task: {Title}", title);
 
-        var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _databaseManager.GetConnectionAsync();
         
         // Verify the list exists
         await ValidateListExistsAsync(connection, listId);
@@ -42,7 +42,7 @@ public class TaskService
             await EnsureOnlyOneActiveTaskPerListAsync(connection, listId);
         }
 
-        var command = connection.CreateCommand();
+        using var command = connection.CreateCommand();
         command.CommandText = @"
             INSERT INTO tasks (title, description, status, list_id, created_at, updated_at, due_date, priority, estimated_hours)
             VALUES (@title, @description, @status, @listId, @createdAt, @updatedAt, @dueDate, @priority, @estimatedHours);
@@ -82,7 +82,7 @@ public class TaskService
     {
         _logger.LogInformation("Updating task: {TaskId}", taskId);
 
-        var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _databaseManager.GetConnectionAsync();
         
         // First, get the current task to verify it exists
         var currentTask = await GetTaskByIdAsync(taskId);

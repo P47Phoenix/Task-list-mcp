@@ -1,58 +1,83 @@
 using Microsoft.Data.Sqlite;
 using TaskListMcp.Models;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace TaskListMcp.Data;
 
 /// <summary>
-/// Manages database connections and initialization for the Task List MCP Server
+/// Manages database initialization and provides database operations for the Task List MCP Server
 /// </summary>
-public class DatabaseManager : IDisposable
+public class DatabaseManager
 {
-    private readonly DatabaseConfig _config;
-    private SqliteConnection? _connection;
-    private bool _disposed = false;
+    private readonly IDbConnectionFactory _connectionFactory;
+    private readonly ILogger<DatabaseManager>? _logger;
+    private readonly SemaphoreSlim _initializationSemaphore = new(1, 1);
+    private volatile bool _isInitialized = false;
 
-    public DatabaseManager(DatabaseConfig config)
+    public DatabaseManager(IDbConnectionFactory connectionFactory, ILogger<DatabaseManager>? logger = null)
     {
-        _config = config ?? throw new ArgumentNullException(nameof(config));
+        _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+        _logger = logger;
     }
 
     /// <summary>
-    /// Gets or creates a database connection
+    /// Creates a new database connection for a single operation
     /// </summary>
     public async Task<SqliteConnection> GetConnectionAsync()
     {
-        if (_connection == null)
+        try
         {
-            _connection = new SqliteConnection(_config.ConnectionString);
-            await _connection.OpenAsync();
-            
-            if (_config.EnableForeignKeys)
-            {
-                var command = _connection.CreateCommand();
-                command.CommandText = "PRAGMA foreign_keys = ON";
-                await command.ExecuteNonQueryAsync();
-            }
+            var connection = await _connectionFactory.CreateConnectionAsync();
+            _logger?.LogDebug("Created new database connection");
+            return connection;
         }
-        
-        return _connection;
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to create database connection");
+            throw;
+        }
     }
 
     /// <summary>
-    /// Initializes the database with required tables
+    /// Initializes the database with required tables (thread-safe)
     /// </summary>
     public async Task InitializeDatabaseAsync()
     {
-        var connection = await GetConnectionAsync();
-        
-        // Create tables
-        await CreateTablesAsync(connection);
-        
-        // Create indexes for performance
-        await CreateIndexesAsync(connection);
-        
-        // Insert default data if needed
-        await InsertDefaultDataAsync(connection);
+        if (_isInitialized)
+            return;
+
+        await _initializationSemaphore.WaitAsync();
+        try
+        {
+            if (_isInitialized)
+                return;
+
+            _logger?.LogInformation("Initializing database...");
+
+            using var connection = await GetConnectionAsync();
+            
+            // Create tables
+            await CreateTablesAsync(connection);
+            
+            // Create indexes for performance
+            await CreateIndexesAsync(connection);
+            
+            // Insert default data if needed
+            await InsertDefaultDataAsync(connection);
+
+            _isInitialized = true;
+            _logger?.LogInformation("Database initialization completed successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Database initialization failed");
+            throw;
+        }
+        finally
+        {
+            _initializationSemaphore.Release();
+        }
     }
 
     private async Task CreateTablesAsync(SqliteConnection connection)
@@ -180,7 +205,7 @@ public class DatabaseManager : IDisposable
 
         foreach (var commandText in commands)
         {
-            var command = connection.CreateCommand();
+            using var command = connection.CreateCommand();
             command.CommandText = commandText;
             await command.ExecuteNonQueryAsync();
         }
@@ -201,7 +226,7 @@ public class DatabaseManager : IDisposable
 
         foreach (var indexText in indexes)
         {
-            var command = connection.CreateCommand();
+            using var command = connection.CreateCommand();
             command.CommandText = indexText;
             await command.ExecuteNonQueryAsync();
         }
@@ -210,27 +235,18 @@ public class DatabaseManager : IDisposable
     private async Task InsertDefaultDataAsync(SqliteConnection connection)
     {
         // Check if we already have a default list
-        var checkCommand = connection.CreateCommand();
+        using var checkCommand = connection.CreateCommand();
         checkCommand.CommandText = "SELECT COUNT(*) FROM task_lists WHERE name = 'Default'";
         var count = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
         
         if (count == 0)
         {
             // Insert default task list
-            var insertCommand = connection.CreateCommand();
+            using var insertCommand = connection.CreateCommand();
             insertCommand.CommandText = @"
                 INSERT INTO task_lists (name, description) 
                 VALUES ('Default', 'Default task list for new tasks')";
             await insertCommand.ExecuteNonQueryAsync();
-        }
-    }
-
-    public void Dispose()
-    {
-        if (!_disposed)
-        {
-            _connection?.Dispose();
-            _disposed = true;
         }
     }
 }

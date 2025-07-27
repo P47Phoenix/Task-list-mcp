@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Data.Sqlite;
 using ModelContextProtocol.Server;
 using TaskListMcp.Models;
 using TaskListMcp.Data;
@@ -123,8 +124,25 @@ class Program
         services.AddControllers();
         services.AddHealthChecks();
 
-        // Add database manager
-        services.AddSingleton<DatabaseManager>();
+        // Add database services with connection pooling
+        var connectionString = config.Database.ConnectionString;
+        
+        // Enhance connection string with pooling and optimization
+        if (!connectionString.Contains("Pooling="))
+        {
+            var builder = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder(connectionString)
+            {
+                Pooling = true,
+                Cache = Microsoft.Data.Sqlite.SqliteCacheMode.Shared,
+                ForeignKeys = config.Database.EnableForeignKeys,
+                DefaultTimeout = 30
+            };
+            connectionString = builder.ToString();
+        }
+        
+        services.AddSingleton<IDbConnectionFactory>(provider => 
+            new SqliteConnectionFactory(connectionString));
+        services.AddScoped<DatabaseManager>();
 
         // Add business logic services
         services.AddScoped<TaskService>();
