@@ -7,8 +7,8 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution file
-COPY TaskListMcp.sln .
+# Copy production solution file (excludes test projects)
+COPY TaskListMcp.Production.sln .
 
 # Copy project files
 COPY src/TaskListMcp.Models/TaskListMcp.Models.csproj src/TaskListMcp.Models/
@@ -18,13 +18,13 @@ COPY src/TaskListMcp.Server/TaskListMcp.Server.csproj src/TaskListMcp.Server/
 
 # Restore dependencies
 RUN dotnet nuget locals all --clear
-RUN dotnet restore --verbosity normal
+RUN dotnet restore TaskListMcp.Production.sln --verbosity normal
 
 # Copy source code
 COPY src/ src/
 
 # Build the application
-RUN dotnet build -c Release
+RUN dotnet build TaskListMcp.Production.sln -c Release
 
 # Publish the application
 FROM build AS publish
