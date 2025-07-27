@@ -147,10 +147,11 @@ class Program
         // Add business logic services
         services.AddScoped<TaskService>();
         services.AddScoped<ListService>();
-        services.AddScoped<TemplateService>();
-        services.AddScoped<TagService>();
-        services.AddScoped<AttributeService>();
-        services.AddScoped<SearchService>();
+        // TODO: Update these services to use IDbConnectionFactory instead of DatabaseManager
+        // services.AddScoped<TemplateService>();
+        // services.AddScoped<TagService>();
+        // services.AddScoped<AttributeService>();
+        // services.AddScoped<SearchService>();
 
         // MCP tools are automatically discovered via attributes
         // No need to manually register them with the new SDK

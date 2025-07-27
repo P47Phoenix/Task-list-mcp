@@ -10,12 +10,12 @@ namespace TaskListMcp.Core.Services;
 /// </summary>
 public class ListService
 {
-    private readonly DatabaseManager _databaseManager;
+    private readonly IDbConnectionFactory _connectionFactory;
     private readonly ILogger<ListService> _logger;
 
-    public ListService(DatabaseManager databaseManager, ILogger<ListService> logger)
+    public ListService(IDbConnectionFactory connectionFactory, ILogger<ListService> logger)
     {
-        _databaseManager = databaseManager;
+        _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
         _logger = logger;
     }
 
@@ -41,7 +41,7 @@ public class ListService
             await ValidateNoCircularReferenceAsync(parentListId.Value, parentListId.Value);
         }
 
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         
         const string sql = @"
             INSERT INTO task_lists (name, description, parent_list_id, created_at, updated_at)
@@ -103,7 +103,7 @@ public class ListService
             await ValidateNoCircularReferenceAsync(listId, parentListId.Value);
         }
 
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         
         const string sql = @"
             UPDATE task_lists 
@@ -140,7 +140,7 @@ public class ListService
         if (existingList == null)
             return false;
 
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         using var transaction = connection.BeginTransaction();
 
         try
@@ -197,7 +197,7 @@ public class ListService
     /// </summary>
     public async Task<TaskList?> GetListByIdAsync(int listId)
     {
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         
         const string sql = @"
             SELECT l.id, l.name, l.description, l.parent_list_id, l.created_at, l.updated_at,
@@ -234,7 +234,7 @@ public class ListService
     /// </summary>
     public async Task<List<TaskList>> GetAllListsAsync(bool hierarchical = false)
     {
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         
         const string sql = @"
             SELECT l.id, l.name, l.description, l.parent_list_id, l.created_at, l.updated_at,
@@ -288,7 +288,7 @@ public class ListService
                 throw new ArgumentException($"Target list with ID {targetListId} does not exist", nameof(targetListId));
         }
 
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         
         const string sql = @"
             UPDATE tasks 
@@ -314,7 +314,7 @@ public class ListService
 
     private async Task<bool> ListExistsAsync(int listId)
     {
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         const string sql = "SELECT COUNT(*) FROM task_lists WHERE id = @listId";
         using var command = new SqliteCommand(sql, connection);
         command.Parameters.AddWithValue("@listId", listId);
@@ -328,7 +328,7 @@ public class ListService
         var ancestors = new HashSet<int>();
         int? currentParentId = proposedParentId;
 
-        using var connection = await _databaseManager.GetConnectionAsync();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
         
         while (currentParentId.HasValue)
         {

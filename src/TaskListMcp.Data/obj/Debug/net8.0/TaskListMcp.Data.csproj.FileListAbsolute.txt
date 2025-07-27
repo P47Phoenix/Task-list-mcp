@@ -1,0 +1,16 @@
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.csproj.AssemblyReference.cache
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.AssemblyInfoInputs.cache
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.AssemblyInfo.cs
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.csproj.CoreCompileInputs.cache
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.sourcelink.json
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\bin\Debug\net8.0\TaskListMcp.Data.deps.json
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\bin\Debug\net8.0\TaskListMcp.Data.dll
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\bin\Debug\net8.0\TaskListMcp.Data.pdb
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\bin\Debug\net8.0\TaskListMcp.Models.dll
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\bin\Debug\net8.0\TaskListMcp.Models.pdb
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskList.BA826B20.Up2Date
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.dll
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\refint\TaskListMcp.Data.dll
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\TaskListMcp.Data.pdb
+C:\GitHub\Task-list-mcp\src\TaskListMcp.Data\obj\Debug\net8.0\ref\TaskListMcp.Data.dll

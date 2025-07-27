@@ -63,16 +63,9 @@ public class TaskService
         
         _logger.LogInformation("Created task with ID: {TaskId}", taskId);
         
-        return new TaskItem
-        {
-            Id = taskId,
-            Title = title,
-            Description = description,
-            Status = status,
-            ListId = listId,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        // Return the actual created task by retrieving it from the database
+        var createdTask = await GetTaskByIdAsync(taskId);
+        return createdTask ?? throw new InvalidOperationException($"Failed to retrieve created task with ID {taskId}");
     }
 
     /// <summary>
